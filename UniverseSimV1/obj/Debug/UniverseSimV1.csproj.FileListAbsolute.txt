@@ -1,0 +1,14 @@
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\bin\Debug\UniverseSimV1.exe.config
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\bin\Debug\UniverseSimV1.exe
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\bin\Debug\UniverseSimV1.pdb
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.csprojResolveAssemblyReference.cache
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\MainWindow.g.cs
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\App.g.cs
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1_MarkupCompile.cache
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1_MarkupCompile.lref
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\MainWindow.baml
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.g.resources
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.Properties.Resources.resources
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.csproj.GenerateResource.Cache
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.exe
+C:\Repos\Sim\UniverseSimV1\UniverseSimV1\obj\Debug\UniverseSimV1.pdb
