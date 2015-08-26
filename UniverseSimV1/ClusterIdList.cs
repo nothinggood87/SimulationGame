@@ -23,7 +23,6 @@ namespace UniverseSimV1
                 if (!clusterIdList[i])
                 {
                     clusterIdList[i] = true;
-                    debug("newClusterId = " + i);
                     return i;
                 }
             }
@@ -39,7 +38,6 @@ namespace UniverseSimV1
             }
             clusterIdList[clusterIdListSize] = true;
             clusterIdListSize++;
-            debug("CreateNewClusterId = " + (clusterIdListSize - 1));
             return clusterIdListSize - 1;
         }
         private void debug(string input) { /*System.Windows.MessageBox.Show(input);*/}

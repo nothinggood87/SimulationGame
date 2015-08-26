@@ -99,7 +99,14 @@ namespace UniverseSimV1
                     {
                         if (map.map[i, j].clusterId == clusterId && map.map[i, j].mass != 0)
                         {
-                            map.map[i, j]= new Tile();
+                            if(map.map[i, j].isPlayer && !Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.height, map.width))
+                            {
+                            }
+                            else
+                            {
+                                map.map[i, j]= new Tile();
+                            }
+
                         }
                     }
                 }
@@ -155,7 +162,7 @@ namespace UniverseSimV1
         }
         private static void UpdatePlayer(int[] coords,short[] flashVector,Map map)
         {
-            if (Helper.SafeCoords(coords, flashVector, map.height, map.width));
+            if (Helper.SafeCoords(coords, flashVector, map.height, map.width))
             {
                 if(map.tile(coords, flashVector).mass == 0)
                 {
