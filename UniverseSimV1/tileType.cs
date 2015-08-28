@@ -23,7 +23,6 @@ namespace UniverseSimV1
         }
         private static Image GetImage(int Id)
         {
-
             Image getImage = new Image();
             getImage.Height = textureSize;
             getImage.Width = textureSize;
@@ -31,7 +30,27 @@ namespace UniverseSimV1
             return getImage;
         }
         private static ImageSource GetSource(int Id) => new BitmapImage(new Uri(baseLocation + textureSize + @"\" + Enum.GetName(typeof(textures), Id) + ".bmp"));
-        public static Image GetTexture(int Id) => getTexture[Id];
+        public static Image GetTexture(Tile tile)
+        {
+            if(tile.IsPlayer)
+            {
+                return GetTexture((int)textures.player);
+            }
+            if(tile.mass == (int)textures.player)
+            {
+                return GetTexture((int)textures.rock);
+            }
+            return GetTexture(tile.mass);
+        }
+        public static Image GetTexture(int Id)
+        {
+            if(Id > (int)textures.player)
+            {
+                return getTexture[(int)textures.rock];
+            }
+            return GetImage(Id);
+        }
+        //public static Image GetTexture(int Id) => getTexture[Id];
         private static Image[] getTexture => new Image[4]
         {
             GetImage((int)textures.space),

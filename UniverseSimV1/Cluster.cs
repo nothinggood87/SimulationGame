@@ -10,13 +10,13 @@ namespace UniverseSimV1
     {
         public static void SetClusterHasMoved(int clusterId,bool hasMoved,Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if(map.map[i,j].clusterId == clusterId)
+                    if(map.map[i,j].ClusterId == clusterId)
                     {
-                        map.map[i, j].hasMoved = hasMoved;
+                        map.map[i, j].HasMoved = hasMoved;
                     }
                 }
             }
@@ -25,11 +25,11 @@ namespace UniverseSimV1
         {
             int[] velocity = new int[2];
             int size = 0;
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId)
+                    if (map.map[i, j].ClusterId == clusterId)
                     {
                         velocity[0] += map.map[i, j].velocityRoundedActual[0];
                         velocity[1] += map.map[i, j].velocityRoundedActual[1];
@@ -46,22 +46,22 @@ namespace UniverseSimV1
             velocity[1] /= size;
             return velocity;
         }
-        public static void SetClusterId(Map map) => SetClusterId(map.clusterIdList, map);
+        public static void SetClusterId(Map map) => SetClusterId(map.ClusterIdList, map);
         public static void SetClusterId(ClusterIdList clusterIdList,Map map)
         {
             clusterIdList.Reset();
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    map.map[i, j].clusterId = -1;                
+                    map.map[i, j].ClusterId = -1;                
                 }
             }
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == -1 && map.map[i, j].baseMass != 0)
+                    if (map.map[i, j].ClusterId == -1 && map.map[i, j].BaseMass != 0)
                     {
                         SetClusterId(new int[2] { i, j }, clusterIdList.GetNewClusterId(),map);
                     }
@@ -72,26 +72,26 @@ namespace UniverseSimV1
         public static void SetClusterId(int[] coords,int newClusterId,Map map)
         {
             bool[,] boolMap = GetBoolMapOfCluster(coords,map);
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
                     if (boolMap[i,j])
                     {
-                        map.map[i, j].clusterId = newClusterId;
+                        map.map[i, j].ClusterId = newClusterId;
                     }
                 }
             }
         }
         public static void SetClusterId(int clusterId,int newClusterId,Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId)
+                    if (map.map[i, j].ClusterId == clusterId)
                     {
-                        map.map[i, j].clusterId = newClusterId;
+                        map.map[i, j].ClusterId = newClusterId;
                     }
                 }
             }
@@ -100,20 +100,20 @@ namespace UniverseSimV1
         {
             int[] velocity = map.tile(coords).velocityRoundedActual;
             bool stillFinding = true;
-            bool[,] boolMap = new bool[map.height, map.height];
+            bool[,] boolMap = new bool[map.Height, map.Height];
             boolMap[coords[0], coords[1]] = true;
             while(stillFinding)
             {
                 stillFinding = false;
-                for (int i = 0; i < map.height; i++)
+                for (int i = 0; i < map.Height; i++)
                 {
-                    for (int j = 0; j < map.width; j++)
+                    for (int j = 0; j < map.Width; j++)
                     {
                         if (map.map[i, j].mass != 0)
                         {
                             if (!boolMap[i, j] && map.map[i, j].velocityRoundedActual[0] == velocity[0] && map.map[i, j].velocityRoundedActual[1] == velocity[1])
                             {
-                                if (IsAdjacent(boolMap, new int[2] { i, j }))
+                                if (IsAdjacent(boolMap, new int[2] { i, j },map.Height,map.Width))
                                 {
                                     boolMap[i, j] = true;
                                     stillFinding = true;
@@ -125,8 +125,12 @@ namespace UniverseSimV1
             }
             return boolMap;
         }
-        private static bool IsAdjacent(bool[,] boolMap, int[] checkingCoords)
+        private static bool IsAdjacent(bool[,] boolMap, int[] checkingCoords,int height,int width)
         {
+            if(Helper.SafeCoords(checkingCoords,height,width))
+            {
+                return false;
+            }
             if (boolMap[checkingCoords[0] + 1, checkingCoords[1]] || boolMap[checkingCoords[0], checkingCoords[1] + 1])
             {
                 return true;

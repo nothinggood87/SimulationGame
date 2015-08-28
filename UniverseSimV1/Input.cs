@@ -19,19 +19,30 @@ namespace UniverseSimV1
 {
     class Input
     {
+        private GameWindowObj window;
         private Map map;
-        private Screen screen;
-        public Input(Map worldMap,Screen simScreen)
+        public Input(Map worldMap)
         {
-            screen = simScreen;
             map = worldMap;
             input = new Window();
             input.Height = height;
             input.Width = width;
             Construct();
             input.Show();
-            
+            window = new GameWindowObj(map);
+            window.Show();
+            Updating = new System.Threading.Thread(() =>
+            {
+                running = true;
+                while(!pause)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    Tick();
+                }
+                running = false;
+            });
         }
+        public System.Threading.Thread Updating;
         public int[] playerAcceleration { get; private set; } = new int[2];
         public void playerAccelerationReset() { playerAcceleration = new int[2]; }
         private Window input;
@@ -66,28 +77,28 @@ namespace UniverseSimV1
                     Grid.SetColumn(buttons[i, j], j);
                 }
             }
-            buttons[0, 0].Content = "Blank";
+            buttons[0, 0].Content = "Start";
             buttons[0, 1].Content = "Up";
-            buttons[0, 2].Content = "Tick";
+            buttons[0, 2].Content = "Stop";
 
             buttons[1, 0].Content = "Left";
             buttons[1, 1].Content = "Down";
             buttons[1, 2].Content = "Right";
 
-            buttons[2, 0].Content = "Blank";
+            buttons[2, 0].Content = "Play";
             buttons[2, 1].Content = "Blank";
             buttons[2, 2].Content = "Blank";
 
 
-            buttons[0, 0].Click += InputFire;
+            buttons[0, 0].Click += InputStart;
             buttons[0, 1].Click += InputUp;
-            buttons[0, 2].Click += InputStart;
+            buttons[0, 2].Click += InputStop;
 
             buttons[1, 0].Click += InputLeft;
             buttons[1, 1].Click += InputDown;
             buttons[1, 2].Click += InputRight;
 
-            buttons[2, 0].Click += InputBlank;
+            buttons[2, 0].Click += InputTogglePause;
             buttons[2, 1].Click += InputBlank;
             buttons[2, 2].Click += InputBlank;
         }
@@ -108,28 +119,17 @@ namespace UniverseSimV1
                 grid.RowDefinitions.Add(height);
             }
         }
-        private void InputFire(object sender, RoutedEventArgs e)
+        private void InputStart(object sender, RoutedEventArgs e)
         {
+            window.Start();
         }
         private void InputUp(object sender, RoutedEventArgs e)
         {
             playerAcceleration[0]--;
         }
-        private bool started = false;
-        private bool paused = false;
-        private void InputStart(object sender, RoutedEventArgs e)
+        private void InputStop(object sender, RoutedEventArgs e)
         {
-            //paused = false;
-            //if(!started)
-            //{
-            //  started = true;
-            //while(!paused)
-            //{
-            Move.OneTick(map,playerAcceleration);
-            screen.Update(map);
-            return;
-                //}
-            //}
+            window.Stop();
         }
 
         private void InputLeft(object sender, RoutedEventArgs e)
@@ -144,13 +144,29 @@ namespace UniverseSimV1
         {
             playerAcceleration[1]++;
         }
+        private bool pause = true;
+        private bool running = false;
+        private void InputTogglePause(object sender, RoutedEventArgs e)
+        {
+            pause = !pause;
+            System.Threading.Thread.Sleep(100);
+            if(!pause && !running)
+            {
+                Updating.Start();
+                buttons[2, 0].Content = "Pause";
+                return;
+            }
+            buttons[2, 0].Content = "Play";
 
+        }
         private void InputBlank(object sender, RoutedEventArgs e)
         {
+            window.UpdateWindow();
         }
-        private void InputStop(object sender, RoutedEventArgs e)
+        private void Tick()
         {
-            paused = true;
+            Move.OneTick(map);
+            Gravity.UpdateGravity(map);
         }
     }
 }

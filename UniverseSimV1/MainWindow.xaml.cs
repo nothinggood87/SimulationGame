@@ -16,11 +16,13 @@ using System.Timers;
 
 namespace UniverseSimV1
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private delegate void GameWindowObj(Grid grid, Map map);
         private Map world;
         public MainWindow()
         {
@@ -31,7 +33,8 @@ namespace UniverseSimV1
             world.PlaceOneTile(new int[2] { 4, 4 });
             world.PlacePlayer(new int[2] { 20, 20 },5);
             world.PlaceOneTile(new int[2] { 4, 0 }, new Tile(2, new double[2] { 0, 20 }));
-            Input player = new Input(world, new Screen(world));
+            world.PlaceOneTile(new int[2] { 13, 13 }, new Tile(1000));
+            Input player = new Input(world);
             //tileTypes.GetImage needs work!
         }
     }

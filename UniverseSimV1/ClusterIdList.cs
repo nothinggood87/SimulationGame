@@ -8,14 +8,19 @@ namespace UniverseSimV1
 {
     class ClusterIdList
     {
+        private bool[] clusterIdList;
+        public bool clusterId(int number) => clusterIdList[number];
+        public int clusterIdListSize { get; private set; }
         public void Reset()
         {
             clusterIdListSize = 0;
             clusterIdList = new bool[0];
         }
-        private bool[] clusterIdList;
-        public bool clusterId(int number) => clusterIdList[number];
-        public int clusterIdListSize { get; private set; }
+        public void SetClusterIdList(ClusterIdList idList)
+        {
+            clusterIdList = idList.clusterIdList;
+            clusterIdListSize = idList.clusterIdListSize;
+        }
         public int GetNewClusterId()
         {
             for (int i = 0; i < clusterIdListSize; i++)
@@ -40,6 +45,5 @@ namespace UniverseSimV1
             clusterIdListSize++;
             return clusterIdListSize - 1;
         }
-        private void debug(string input) { /*System.Windows.MessageBox.Show(input);*/}
     }
 }

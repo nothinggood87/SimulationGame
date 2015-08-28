@@ -17,15 +17,15 @@ namespace UniverseSimV1
         /// <returns></returns>
         public static int CheckCollide(int clusterId,short[] flashVector,Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId && Helper.SafeCoords(new int[2] {i + flashVector[0],j + flashVector[1] },map.height,map.width))
+                    if (map.map[i, j].ClusterId == clusterId && Helper.SafeCoords(new int[2] {i + flashVector[0],j + flashVector[1] },map.Height,map.Width))
                     {
-                        if (map.map[i + flashVector[0], j + flashVector[1]].baseMass != 0 && map.map[i + flashVector[0], j + flashVector[1]].clusterId != clusterId)
+                        if (map.map[i + flashVector[0], j + flashVector[1]].BaseMass != 0 && map.map[i + flashVector[0], j + flashVector[1]].ClusterId != clusterId)
                         {
-                            return map.map[i + flashVector[0], j + flashVector[1]].clusterId;
+                            return map.map[i + flashVector[0], j + flashVector[1]].ClusterId;
                         }
                     }
                 }
@@ -34,17 +34,17 @@ namespace UniverseSimV1
         }
         private static int[] CheckCollideWith(int clusterId, short[] flashVector, Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId && Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.height, map.width))
+                    if (map.map[i, j].ClusterId == clusterId && Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.Height, map.Width))
                     {
                         for(int k = -1;k < 2;k += 2)
                         {
                             for (int h = -1; h < 2; h += 2)
                             {
-                                if(map.map[i + flashVector[0], j + flashVector[1]].mass > 0 && map.map[i + flashVector[0], j + flashVector[1]].clusterId != clusterId)
+                                if(map.map[i + flashVector[0], j + flashVector[1]].mass > 0 && map.map[i + flashVector[0], j + flashVector[1]].ClusterId != clusterId)
                                 {
                                     return new int[2] { i, j };
                                 }
@@ -57,24 +57,24 @@ namespace UniverseSimV1
         }
         private static int[] CheckCollideWith(int clusterId, Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId)
+                    if (map.map[i, j].ClusterId == clusterId)
                     {
                         for (int k = -1; k < 2; k += 2)
                         {
-                            if (Helper.SafeCoords(new int[2] { i + k, j }, map.height, map.width))
+                            if (Helper.SafeCoords(new int[2] { i + k, j }, map.Height, map.Width))
                             {
-                                if (map.map[i + k, j].mass > 0 && map.map[i + k, j].clusterId != clusterId)
+                                if (map.map[i + k, j].mass > 0 && map.map[i + k, j].ClusterId != clusterId)
                                 {
                                     return new int[2] { i + k, j };
                                 }
                             }
-                            if (Helper.SafeCoords(new int[2] { i, j + k }, map.height, map.width))
+                            if (Helper.SafeCoords(new int[2] { i, j + k }, map.Height, map.Width))
                             {
-                                if (map.map[i, j + k].mass > 0 && map.map[i, j + k].clusterId != clusterId)
+                                if (map.map[i, j + k].mass > 0 && map.map[i, j + k].ClusterId != clusterId)
                                 {
                                     return new int[2] { i, j + k };
                                 }
@@ -106,26 +106,26 @@ namespace UniverseSimV1
             while (updating)
             {
                 updating = false;
-                for (int i = 0; i < map.height; i++)
+                for (int i = 0; i < map.Height; i++)
                 {
-                    for (int j = 0; j < map.width; j++)
+                    for (int j = 0; j < map.Width; j++)
                     {
-                        if (map.map[i, j].clusterId == clusterId)
+                        if (map.map[i, j].ClusterId == clusterId)
                         {
                             updating = true;
-                            map.map[i, j].clusterId = -2048;
+                            map.map[i, j].ClusterId = -2048;
                             MoveTile(new int[2] { i, j }, velocityMatrixRounded, map);
                         }
                     }
                 }
             }
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == -2048)
+                    if (map.map[i, j].ClusterId == -2048)
                     {
-                        map.map[i, j].clusterId = clusterId;
+                        map.map[i, j].ClusterId = clusterId;
                     }
                 }
             }
@@ -141,7 +141,7 @@ namespace UniverseSimV1
                 flashVector = Helper.GetFlashVector(velocity);
                 velocity[0] -= flashVector[0];
                 velocity[1] -= flashVector[1];
-                if(Helper.SafeCoords(new int[2] { flashCoords[0] + flashVector[0], flashCoords[1] + flashVector[1] }, map.height, map.width))
+                if(Helper.SafeCoords(new int[2] { flashCoords[0] + flashVector[0], flashCoords[1] + flashVector[1] }, map.Height, map.Width))
                 {
                     if (map.IsObject(flashCoords, flashVector))
                     {
@@ -160,7 +160,7 @@ namespace UniverseSimV1
                 }
                 flashCoords[0] -= flashVector[0];
                 flashCoords[1] -= flashVector[1];
-                if(!Helper.SafeCoords(new int[2] { flashCoords[0], flashCoords[1] }, map.height, map.width))
+                if(!Helper.SafeCoords(new int[2] { flashCoords[0], flashCoords[1] }, map.Height, map.Width))
                 {
                     return;
                 }
@@ -168,7 +168,7 @@ namespace UniverseSimV1
         }
         private static void CollideTile(int[] coords1,int[] coords2,Map map)
         {
-            if(map.tile(coords1).baseMass == map.tile(coords2).baseMass)
+            if(map.tile(coords1).BaseMass == map.tile(coords2).BaseMass)
             {
                 CollideTilePressure(coords1, coords2,map);
                 return;
@@ -186,11 +186,9 @@ namespace UniverseSimV1
             int transferAmount = Convert.ToInt32(Math.Round(Helper.AddValues(forceRelative)));
             if(map.tile(coords1).mass <= transferAmount)
             {
-                double[] force1 = Helper.GetForce(map.tile(coords1));
                 map.tile(coords2).pressure += map.tile(coords1).pressure;
-                double[] addVelocity = Helper.GetVelocity(force1, map.tile(coords2).mass);
-                map.tile(coords2).velocity[0] += addVelocity[0];
-                map.tile(coords2).velocity[1] += addVelocity[1];
+                map.tile(coords2).velocity[0] += map.tile(coords1).velocity[0];
+                map.tile(coords2).velocity[1] += map.tile(coords1).velocity[1];
                 map.tile(coords1).SetTile(new Tile());
                 return;
             }

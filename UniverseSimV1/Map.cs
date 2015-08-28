@@ -11,26 +11,32 @@ namespace UniverseSimV1
     class Map
     {
         //public void start() => physics.tick.Start();
-        public ClusterIdList clusterIdList = new ClusterIdList();
+        public ClusterIdList ClusterIdList = new ClusterIdList();
         public Tile[,] map;
-        public int height { get; }
-        public int width { get; }
+        public int Height { get; }
+        public int Width { get; }
         public Map()
             :this(25,25)
         {
         }
+        public Map(Map newMap)
+        {
+            Height = newMap.Height;
+            Width = newMap.Width;
+            SetMap(newMap);
+        }
         public Map(int mapHeight,int mapWidth)
         {
-            height = mapHeight;
-            width = mapWidth;
-            map = new Tile[height, width];
+            Height = mapHeight;
+            Width = mapWidth;
+            map = new Tile[Height, Width];
             CleanMap();
         }
         public void CleanMap()
         {
-            for(int i = 0;i < height;i++)
+            for(int i = 0;i < Height;i++)
             {
-                for(int j = 0;j < width;j++)
+                for(int j = 0;j < Width;j++)
                 {
                     map[i, j] = new Tile();
                 }
@@ -38,19 +44,19 @@ namespace UniverseSimV1
         }
         public void HasMoved(bool newValue)
         {
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < Width; j++)
                 {
-                    map[i, j].hasMoved = newValue;
+                    map[i, j].HasMoved = newValue;
                 }
             }
         }
         public void InternalTick()
         {
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < Width; j++)
                 {
                     map[i, j].InternalTick();
                 }
@@ -67,8 +73,23 @@ namespace UniverseSimV1
         public void PlacePlayer(int[] coords, int mass)
         {
             Tile tile = new Tile(mass);
-            tile.isPlayer = true;
+            tile.IsPlayer = true;
             PlaceOneTile(coords, tile);
+        }
+        /// <summary>
+        /// cannot change Height/Width
+        /// </summary>
+        /// <param name="newMap"></param>
+        private void SetMap(Map newMap)
+        {
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    map[i, j].SetTile(newMap.map[i, j]);
+                }
+            }
+            ClusterIdList.SetClusterIdList(newMap.ClusterIdList);
         }
     }
 }

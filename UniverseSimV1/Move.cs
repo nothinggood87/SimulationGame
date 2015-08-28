@@ -20,9 +20,9 @@ namespace UniverseSimV1
             Cluster.SetClusterId(map);
             map.HasMoved(false);
             map.InternalTick();
-            for (int i = 0; i < map.clusterIdList.clusterIdListSize; i++)
+            for (int i = 0; i < map.ClusterIdList.clusterIdListSize; i++)
             {
-                if(map.clusterIdList.clusterId(i))
+                if(map.ClusterIdList.clusterId(i))
                 {
                     Update(i, map);
                 }
@@ -79,12 +79,12 @@ namespace UniverseSimV1
         private static void MoveClusterOneTile(int clusterId,short[] flashVector,Map map)
         {
             // copy map
-            Map copy = new Map(map.height, map.width);
-            for (int i = 0; i < map.height; i++)
+            Map copy = new Map(map.Height, map.Width);
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].clusterId == clusterId && map.map[i, j].mass > 0)
+                    if (map.map[i, j].ClusterId == clusterId && map.map[i, j].mass > 0)
                     {
                         copy.map[i, j].SetTile(map.map[i, j]);
                     }
@@ -93,13 +93,13 @@ namespace UniverseSimV1
             if (flashVector[0] + flashVector[1] != 0)
             {
                 // delete
-                for (int i = 0; i < map.height; i++)
+                for (int i = 0; i < map.Height; i++)
                 {
-                    for (int j = 0; j < map.width; j++)
+                    for (int j = 0; j < map.Width; j++)
                     {
-                        if (map.map[i, j].clusterId == clusterId && map.map[i, j].mass != 0)
+                        if (map.map[i, j].ClusterId == clusterId && map.map[i, j].mass != 0)
                         {
-                            if(map.map[i, j].isPlayer && !Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.height, map.width))
+                            if(map.map[i, j].IsPlayer && !Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.Height, map.Width))
                             {
                             }
                             else
@@ -112,13 +112,13 @@ namespace UniverseSimV1
                 }
             }
             // paste
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (copy.map[i, j].mass > 0 && copy.map[i, j].clusterId == clusterId)
+                    if (copy.map[i, j].mass > 0 && copy.map[i, j].ClusterId == clusterId)
                     {
-                        if (Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.height, map.width))
+                        if (Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.Height, map.Width))
                         {
                             map.map[i + flashVector[0], j + flashVector[1]].SetTile(copy.map[i, j]);
                         }
@@ -128,11 +128,11 @@ namespace UniverseSimV1
         }
         private static void UpdatePlayer(int[] playerAcceleration,Map map)
         {
-            for (int i = 0; i < map.height; i++)
+            for (int i = 0; i < map.Height; i++)
             {
-                for (int j = 0; j < map.width; j++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    if (map.map[i, j].isPlayer)
+                    if (map.map[i, j].IsPlayer)
                     {
                         UpdatePlayer(new int[2] { i, j },playerAcceleration,map);
                     }
@@ -162,7 +162,7 @@ namespace UniverseSimV1
         }
         private static void UpdatePlayer(int[] coords,short[] flashVector,Map map)
         {
-            if (Helper.SafeCoords(coords, flashVector, map.height, map.width))
+            if (Helper.SafeCoords(coords, flashVector, map.Height, map.Width))
             {
                 if(map.tile(coords, flashVector).mass == 0)
                 {
