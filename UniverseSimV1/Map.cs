@@ -23,6 +23,8 @@ namespace UniverseSimV1
         {
             Height = newMap.Height;
             Width = newMap.Width;
+            map = new Tile[Height, Width];
+            CleanMap();
             SetMap(newMap);
         }
         public Map(int mapHeight,int mapWidth)

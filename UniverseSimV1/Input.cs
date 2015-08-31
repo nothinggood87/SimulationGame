@@ -31,20 +31,12 @@ namespace UniverseSimV1
             input.Show();
             window = new GameWindowObj(map);
             window.Show();
-            Updating = new System.Threading.Thread(() =>
-            {
-                running = true;
-                while(!pause)
-                {
-                    System.Threading.Thread.Sleep(100);
-                    Tick();
-                }
-                running = false;
-            });
+            Updating.Elapsed += Tick;
         }
-        public System.Threading.Thread Updating;
-        public int[] playerAcceleration { get; private set; } = new int[2];
-        public void playerAccelerationReset() { playerAcceleration = new int[2]; }
+        private static int TickRate = 100;
+        public System.Timers.Timer Updating = new Timer(TickRate);
+        public double[] playerAcceleration { get; private set; } = new double[2];
+        public void playerAccelerationReset() { playerAcceleration = new double[2]; }
         private Window input;
         private Grid grid;
         private Button[,] buttons;
@@ -121,28 +113,30 @@ namespace UniverseSimV1
         }
         private void InputStart(object sender, RoutedEventArgs e)
         {
+            buttons[0, 0].Content = "Started";
             window.Start();
         }
         private void InputUp(object sender, RoutedEventArgs e)
         {
-            playerAcceleration[0]--;
+            playerAcceleration[0] -= 0.2;
         }
         private void InputStop(object sender, RoutedEventArgs e)
         {
+            buttons[0, 0].Content = "Start";
             window.Stop();
         }
 
         private void InputLeft(object sender, RoutedEventArgs e)
         {
-            playerAcceleration[1]--;
+            playerAcceleration[1] -= 0.2;
         }
         private void InputDown(object sender, RoutedEventArgs e)
         {
-            playerAcceleration[0]++;
+            playerAcceleration[0] += 0.2;
         }
         private void InputRight(object sender, RoutedEventArgs e)
         {
-            playerAcceleration[1]++;
+            playerAcceleration[1] += 0.2;
         }
         private bool pause = true;
         private bool running = false;
@@ -150,7 +144,7 @@ namespace UniverseSimV1
         {
             pause = !pause;
             System.Threading.Thread.Sleep(100);
-            if(!pause && !running)
+            if(!pause)
             {
                 Updating.Start();
                 buttons[2, 0].Content = "Pause";
@@ -161,12 +155,16 @@ namespace UniverseSimV1
         }
         private void InputBlank(object sender, RoutedEventArgs e)
         {
-            window.UpdateWindow();
         }
+        private void Tick(object sender, ElapsedEventArgs e) => Tick();
         private void Tick()
         {
-            Move.OneTick(map);
+            if (running) { return; }
+            running = true;
+            Move.OneTick(map, playerAcceleration);
             Gravity.UpdateGravity(map);
+            playerAcceleration = new double[2];
+            running = false;
         }
     }
 }

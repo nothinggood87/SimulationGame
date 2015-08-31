@@ -13,8 +13,8 @@ namespace UniverseSimV1
     static class TileTypes
     {
         private const string baseLocation = @"C:\Repos\Sim\UniverseSimV1\UniverseSimV1\resources\";
-        public const int textureSize = 16;
-        public enum textures
+        public const int textureSize = 8;
+        private enum textures
         {
             space = 0,
             water,
@@ -30,33 +30,38 @@ namespace UniverseSimV1
             return getImage;
         }
         private static ImageSource GetSource(int Id) => new BitmapImage(new Uri(baseLocation + textureSize + @"\" + Enum.GetName(typeof(textures), Id) + ".bmp"));
-        public static Image GetTexture(Tile tile)
+        private static Image GetTexture(Tile tile) => GetTexture(GetProcessedTextureId(tile));
+        private static int GetProcessedTextureId(Tile tile)
         {
-            if(tile.IsPlayer)
+            if (tile.IsPlayer)
             {
-                return GetTexture((int)textures.player);
+                return (int)textures.player;
             }
-            if(tile.mass == (int)textures.player)
+            if (tile.mass > (int)textures.rock)
             {
-                return GetTexture((int)textures.rock);
+                return (int)textures.rock;
             }
-            return GetTexture(tile.mass);
+            return tile.mass;
         }
-        public static Image GetTexture(int Id)
-        {
-            if(Id > (int)textures.player)
-            {
-                return getTexture[(int)textures.rock];
-            }
-            return GetImage(Id);
-        }
-        //public static Image GetTexture(int Id) => getTexture[Id];
-        private static Image[] getTexture => new Image[4]
+        public static Image GetTexture(int ProcessedId) => GetImage(ProcessedId);
+        private static Image[] getTexture { get; } = new Image[4]
         {
             GetImage((int)textures.space),
             GetImage((int)textures.water),
             GetImage((int)textures.rock),
-            GetImage((int)textures.player)
+           GetImage((int)textures.player)
         };
+        public static int[,] GetProcessedIds(Map map)
+        {
+            int[,] IdsMap = new int[map.Width,map.Height];
+            for(int i = 0;i < map.Height;i++)
+            {
+                for (int j = 0; j < map.Width; j++)
+                {
+                    IdsMap[i, j] = GetProcessedTextureId(map.map[i,j]);
+                }
+            }
+            return IdsMap;
+        }
     }
 }

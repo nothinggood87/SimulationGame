@@ -26,77 +26,26 @@ namespace UniverseSimV1
         private Map world;
         public MainWindow()
         {
-            InitializeComponent();
-            world = new Map();
-            world.PlaceOneTile(new int[2] { 2, 2 });
+            Debug.StartCounter();
+            //InitializeComponent();
+            world = new Map(100,100);
+            //world.PlaceOneTile(new int[2] { 2, 2 });
             //world.start();
-            world.PlaceOneTile(new int[2] { 4, 4 });
-            world.PlacePlayer(new int[2] { 20, 20 },5);
-            world.PlaceOneTile(new int[2] { 4, 0 }, new Tile(2, new double[2] { 0, 20 }));
-            world.PlaceOneTile(new int[2] { 13, 13 }, new Tile(1000));
+            //world.PlaceOneTile(new int[2] { 4, 4 });
+            //world.PlacePlayer(new int[2] { 20, 20 },1);
+            //world.PlaceOneTile(new int[2] { 2, 2 }, new Tile(2, new double[2] { 0, 0.2 }));
+            //world.PlaceOneTile(new int[2] { 4, 2 }, new Tile(2, new double[2] { 0, 0.4 }));
+            //world.PlaceOneTile(new int[2] { 6, 2 }, new Tile(2, new double[2] { 0, 0.8 }));
+            //world.PlaceOneTile(new int[2] { 8, 2 }, new Tile(2, new double[2] { 0, 1.6 }));
+            world.PlaceOneTile(new int[2] { 50, 50 }, new Tile(10000));
+            world.PlaceOneTile(new int[2] { 50, 45 }, new Tile(1, new double[2] { 0.5,0 }));
+            //world.PlaceOneTile(new int[2] { 15, 10 });
+            //world.PlaceOneTile(new int[2] { 10, 15 });
+            //world.PlaceOneTile(new int[2] { 20, 15 });
+            //world.PlaceOneTile(new int[2] { 15, 17 }, new Tile(1, new double[2] { -0.01, 0 }));
             Input player = new Input(world);
             //tileTypes.GetImage needs work!
+            //gravity needs work
         }
     }
-    // Use this code inside a project created with the Visual C# > Windows Desktop > Console Application template.  
-// Replace the code in Program.cs with this code.  
-
-        
-
-// To avoid confusion with other Timer classes, this sample always uses the fully-qualified 
-// name of System.Timers.Timer instead of a using statement for System.Timers. 
-
-public class Example
-    {
-        private static System.Timers.Timer aTimer;
-
-        public static void Mainer()
-        {
-            // Normally, the timer is declared at the class level, so that it stays in scope as long as it 
-            // is needed. If the timer is declared in a long-running method, KeepAlive must be used to prevent 
-            // the JIT compiler from allowing aggressive garbage collection to occur before the method ends. 
-            // You can experiment with this by commenting out the class-level declaration and uncommenting  
-            // the declaration below; then uncomment the GC.KeepAlive(aTimer) at the end of the method.         
-            //System.Timers.Timer aTimer; 
-
-            // Create a timer and set a two second interval.
-            aTimer = new System.Timers.Timer();
-            aTimer.Interval = 2000;
-
-            // Alternate method: create a Timer with an interval argument to the constructor. 
-            //aTimer = new System.Timers.Timer(2000); 
-
-            // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(2000);
-
-            // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += OnTimedEvent;
-
-            // Have the timer fire repeated events (true is the default)
-            aTimer.AutoReset = true;
-
-            // Start the timer
-            aTimer.Enabled = true;
-
-            Console.WriteLine("Press the Enter key to exit the program at any time... ");
-            Console.ReadLine();
-
-            // If the timer is declared in a long-running method, use KeepAlive to prevent garbage collection 
-            // from occurring before the method ends.  
-            //GC.KeepAlive(aTimer) 
-        }
-
-        private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            Console.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
-        }
-    }
-
-    // This example displays output like the following:  
-    //       Press the Enter key to exit the program at any time...  
-    //       The Elapsed event was raised at 5/20/2015 8:48:58 PM  
-    //       The Elapsed event was raised at 5/20/2015 8:49:00 PM  
-    //       The Elapsed event was raised at 5/20/2015 8:49:02 PM  
-    //       The Elapsed event was raised at 5/20/2015 8:49:04 PM  
-    //       The Elapsed event was raised at 5/20/2015 8:49:06 PM
 }

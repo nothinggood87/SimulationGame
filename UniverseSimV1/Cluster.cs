@@ -21,30 +21,20 @@ namespace UniverseSimV1
                 }
             }
         }
-        public static int[] GetClusterVelocityMatrixRounded(int clusterId,Map map)
+        public static int[] GetClusterVelocityRounded(int clusterId,Map map)
         {
-            int[] velocity = new int[2];
-            int size = 0;
             for (int i = 0; i < map.Height; i++)
             {
                 for (int j = 0; j < map.Width; j++)
                 {
                     if (map.map[i, j].ClusterId == clusterId)
                     {
-                        velocity[0] += map.map[i, j].velocityRoundedActual[0];
-                        velocity[1] += map.map[i, j].velocityRoundedActual[1];
-                        size++;
+                        return map.map[i, j].VelocityRoundedActual();
                     }
                 }
             }
-            if(size == 0)
-            {
-                System.Windows.MessageBox.Show("Cluster.GetClusterVelocityMatrixRounded.size = 0!");
-                return new int[2];
-            }
-            velocity[0] /= size;
-            velocity[1] /= size;
-            return velocity;
+            System.Windows.MessageBox.Show("Cluster.GetClusterVelocityMatrixRounded.size = 0!");
+            return new int[2];
         }
         public static void SetClusterId(Map map) => SetClusterId(map.ClusterIdList, map);
         public static void SetClusterId(ClusterIdList clusterIdList,Map map)
@@ -98,7 +88,8 @@ namespace UniverseSimV1
         }
         private static bool[,] GetBoolMapOfCluster(int[] coords,Map map)
         {
-            int[] velocity = map.tile(coords).velocityRoundedActual;
+            int[] velocity = map.tile(coords).VelocityRoundedActual();
+            int[] flashVelocity;
             bool stillFinding = true;
             bool[,] boolMap = new bool[map.Height, map.Height];
             boolMap[coords[0], coords[1]] = true;
@@ -111,7 +102,8 @@ namespace UniverseSimV1
                     {
                         if (map.map[i, j].mass != 0)
                         {
-                            if (!boolMap[i, j] && map.map[i, j].velocityRoundedActual[0] == velocity[0] && map.map[i, j].velocityRoundedActual[1] == velocity[1])
+                            flashVelocity = map.map[i, j].VelocityRoundedActual();
+                            if (!boolMap[i, j] && flashVelocity[0] == velocity[0] && flashVelocity[1] == velocity[1])
                             {
                                 if (IsAdjacent(boolMap, new int[2] { i, j },map.Height,map.Width))
                                 {

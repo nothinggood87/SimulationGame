@@ -31,31 +31,25 @@ namespace UniverseSimV1
         public double[] velocity { get; set; }
         //other values
         public int mass => BaseMass * pressure;
-        public int[] velocityRoundedActual => FlashVelocityRounded();
-        private void MicroVelocityUpdate()
-        {
-            int[] velocityRounded = Helper.GetRoundedVelocity(velocity);
-            MicroVelocity[0] += velocity[0];
-            MicroVelocity[1] += velocity[1];
-            MicroVelocity[0] -= velocityRounded[0];
-            MicroVelocity[1] -= velocityRounded[1];
-            if (MicroVelocity[0] >= 1) { FlashVelocity[0]++;MicroVelocity[0]--; }
-            if (MicroVelocity[0] <= -1) { FlashVelocity[0]--; MicroVelocity[0]++; }
-            if (MicroVelocity[1] >= 1) { FlashVelocity[1]++; MicroVelocity[1]--; }
-            if (MicroVelocity[1] <= -1) { FlashVelocity[1]--; MicroVelocity[1]++; }
-        }
-        private int[] FlashVelocityRounded()
+        public int[] VelocityRoundedActual()
         {
             int[] velocity = Helper.GetRoundedVelocity(this.velocity);
             velocity[0] += FlashVelocity[0];
-            velocity[0] += FlashVelocity[0];
+            velocity[1] += FlashVelocity[1];
             return velocity;
         }
         public void InternalTick()
         {
-            if (FlashVelocity[0] != 0) { FlashVelocity[0] = 0; }
-            if (FlashVelocity[1] != 0) { FlashVelocity[1] = 0; }
-            MicroVelocityUpdate();
+            FlashVelocity = new short[2];
+            int[] velocityInt = Helper.GetRoundedVelocity(velocity);
+            MicroVelocity[0] += velocity[0];
+            MicroVelocity[1] += velocity[1];
+            MicroVelocity[0] -= velocityInt[0];
+            MicroVelocity[1] -= velocityInt[1];
+            if (MicroVelocity[0] >= 1) { FlashVelocity[0] = 1; MicroVelocity[0]--; }
+            else if (MicroVelocity[0] * -1 >= 1) { FlashVelocity[0] = -1; MicroVelocity[0]++; }
+            if (MicroVelocity[1] >= 1) { FlashVelocity[1] = 1; MicroVelocity[1]--; }
+            else if (MicroVelocity[1] * -1 >= 1) { FlashVelocity[1] = -1; MicroVelocity[1]++; }
         }
         public void SetTile(Tile tile)
         {

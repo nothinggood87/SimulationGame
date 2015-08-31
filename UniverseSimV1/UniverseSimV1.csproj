@@ -59,6 +59,7 @@
     <Compile Include="ClusterIdList.cs" />
     <Compile Include="Collide.cs" />
     <Compile Include="Debug.cs" />
+    <Compile Include="Fraction.cs" />
     <Compile Include="GameWindow.cs" />
     <Compile Include="GameWindowObj.cs" />
     <Compile Include="Gravity.cs" />

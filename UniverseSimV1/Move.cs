@@ -9,11 +9,12 @@ namespace UniverseSimV1
 {
     static class Move
     {
-        public static void OneTick(Map map) => OneTick(map, new int[2]);
-        public static void OneTick(Map map,int[] playerAcceleration)
+        public static void OneTick(Map map) => OneTick(map, new double[2]);
+        public static void OneTick(Map map,double[] playerAcceleration)
         {
             Update(map);
             UpdatePlayer(playerAcceleration,map);
+            Debug.Tick();
         }
         private static void Update(Map map)
         {
@@ -28,22 +29,22 @@ namespace UniverseSimV1
                 }
             }
         }
-        private static void Update(int clusterId,Map map) => Update(clusterId,Cluster.GetClusterVelocityMatrixRounded(clusterId,map),map);
+        private static void Update(int clusterId,Map map) => Update(clusterId,Cluster.GetClusterVelocityRounded(clusterId,map),map);
         private static void Update(int clusterId, int[] velocity,Map map)
         {
-            if (Helper.GetPositive(velocity[0]) + Helper.GetPositive(velocity[1]) > 0)
+            int[] velocityOriginal = velocity;
+            int[] velocityLeft = velocityOriginal;
+            int distance = Helper.GetDistance(velocityLeft);
+            if (distance > 0)
             {
-                int[] velocityOriginal = velocity;
-                int[] velocityLeft = velocityOriginal;
-                int distance = Helper.GetDistance(velocityLeft);
                 short[] flashVector;
                 bool stillMoving = true;
                 int clusterId2;
                 for (int i = 0; i < distance; i++)
                 {
-                    if (stillMoving)
+                    flashVector = Helper.GetFlashVector(velocityLeft);
+                    if (stillMoving && Helper.GetPositive(flashVector[0]) + Helper.GetPositive(flashVector[1]) != 0)
                     {
-                        flashVector = Helper.GetFlashVector(velocityLeft);
                         velocityLeft[0] -= flashVector[0];
                         velocityLeft[1] -= flashVector[1];
                         clusterId2 = Collide.CheckCollide(clusterId, flashVector,map);
@@ -55,15 +56,15 @@ namespace UniverseSimV1
                         else
                         {
                             Collide.CollisionFluidLike(clusterId, velocityLeft,flashVector,clusterId2 , map);
-                            int[] newVelocity = Cluster.GetClusterVelocityMatrixRounded(clusterId,map);
+                            int[] newVelocity = Cluster.GetClusterVelocityRounded(clusterId,map);
                             for (int h = 0; h < 2; h++)
                             {
                                 if (newVelocity[h] != 0)
                                 {
-                                    if (Helper.GetPositive(newVelocity[h]) + (velocityLeft[h] - velocityOriginal[h]) > 0)
+                                    if (Helper.GetPositive(newVelocity[h]) + Helper.GetPositive(velocityLeft[h] - velocityOriginal[h]) > 0)
                                     {
                                         stillMoving = true;
-                                        velocityLeft[h] += velocityLeft[h] - velocityOriginal[h];
+                                        velocityLeft[h] += newVelocity[h] - velocityOriginal[h];
                                     }
                                 }
                             }
@@ -76,7 +77,7 @@ namespace UniverseSimV1
                 }
             }
         }
-        private static void MoveClusterOneTile(int clusterId,short[] flashVector,Map map)
+        private static void MoveClusterOneTile(int clusterId, short[] flashVector, Map map)
         {
             // copy map
             Map copy = new Map(map.Height, map.Width);
@@ -90,23 +91,16 @@ namespace UniverseSimV1
                     }
                 }
             }
-            if (flashVector[0] + flashVector[1] != 0)
+            // delete
+            for (int i = 0; i < map.Height; i++)
             {
-                // delete
-                for (int i = 0; i < map.Height; i++)
+                for (int j = 0; j < map.Width; j++)
                 {
-                    for (int j = 0; j < map.Width; j++)
+                    if (map.map[i, j].ClusterId == clusterId && map.map[i, j].mass != 0)
                     {
-                        if (map.map[i, j].ClusterId == clusterId && map.map[i, j].mass != 0)
+                        if (!(map.map[i, j].IsPlayer && !Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.Height, map.Width)))
                         {
-                            if(map.map[i, j].IsPlayer && !Helper.SafeCoords(new int[2] { i + flashVector[0], j + flashVector[1] }, map.Height, map.Width))
-                            {
-                            }
-                            else
-                            {
-                                map.map[i, j]= new Tile();
-                            }
-
+                            map.map[i, j] = new Tile();
                         }
                     }
                 }
@@ -126,7 +120,7 @@ namespace UniverseSimV1
                 }
             }
         }
-        private static void UpdatePlayer(int[] playerAcceleration,Map map)
+        private static void UpdatePlayer(double[] playerAcceleration,Map map)
         {
             for (int i = 0; i < map.Height; i++)
             {
@@ -139,12 +133,12 @@ namespace UniverseSimV1
                 }
             }
         }
-        private static void UpdatePlayer(int[] coords,int[] playerAcceleration,Map map)
+        private static void UpdatePlayer(int[] coords,double[] playerAcceleration,Map map)
         {
             map.tile(coords).velocity[0] += playerAcceleration[0];
             map.tile(coords).velocity[1] += playerAcceleration[1];
-            int[] velocity = playerAcceleration;
-            playerAcceleration = new int[2];
+            int[] velocity = Helper.GetRoundedVelocity(playerAcceleration);
+            playerAcceleration = new double[2];
             int distance = Helper.GetDistance(velocity);
             short[] flashVector;
             int[] flashCoords = coords;
