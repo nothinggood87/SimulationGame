@@ -48,8 +48,8 @@ namespace UniverseSimV1
                 for (int j = 0; j < width; j++)
                 {
                     imageGrid[i, j] = TileTypes.GetTexture(processedIdsMap[i, j]);
-                    Grid.SetColumn(imageGrid[i, j], i);
-                    Grid.SetRow(imageGrid[i, j], j);
+                    Grid.SetColumn(imageGrid[i, j], j);
+                    Grid.SetRow(imageGrid[i, j], i);
                     grid.Children.Add(imageGrid[i, j]);
                 }
             }

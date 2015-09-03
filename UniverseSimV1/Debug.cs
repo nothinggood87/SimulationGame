@@ -16,22 +16,22 @@ namespace UniverseSimV1
             if (value[0] != 0 || value[1] != 0) { Write(value); }
             return value;
         }
-        public static double[] ReturnValue(double[] value,string input0)
+        public static double[] ReturnValue(double[] value, string input0)
         {
-            if(value[0] != 0 || value[1] != 0) { Write(input0, value); }
+            if (value[0] != 0 || value[1] != 0) { Write(input0, value); }
             return value;
         }
 
         public static void Write() => Write("Blank");
         public static void Write(Fraction[] input) => Write(new double[2] { input[0].Value, input[1].Value });
-        public static void Write(string input0,double[] input) => Write(input0 + input[0] + " | " + input[1]);
-        public static void Write(string input0,int[] input) => Write(input0 + input[0] + " | " + input[1]);
-        public static void Write(string input0,short[] input) => Write(input0 + input[0] + " | " + input[1]);
+        public static void Write(string input0, double[] input) => Write(input0 + input[0] + " | " + input[1]);
+        public static void Write(string input0, int[] input) => Write(input0 + input[0] + " | " + input[1]);
+        public static void Write(string input0, short[] input) => Write(input0 + input[0] + " | " + input[1]);
         public static void Write(double[] input) => Write(input[0] + " | " + input[1]);
         public static void Write(int[] input) => Write(input[0] + " | " + input[1]);
         public static void Write(short[] input) => Write(input[0] + " | " + input[1]);
-        public static void Write(string input0,double input) => Write(input0 + input);
-        public static void Write(string input0,int input) => Write(input0+input);
+        public static void Write(string input0, double input) => Write(input0 + input);
+        public static void Write(string input0, int input) => Write(input0 + input);
         public static void Write(double input) => Write(Convert.ToString(input));
         public static void Write(int input) => Write(Convert.ToString(input));
         public static void Write(string input)
@@ -40,7 +40,7 @@ namespace UniverseSimV1
         }
         public static void Tick() => Ticks++;
         public static void Frame() => Frames++;
-        private static int Frames = 0;
+        public static int Frames { get; private set; } = 0;
         private static int Ticks = 0;
         private static System.Threading.Thread CounterReset = new System.Threading.Thread(() =>
         {

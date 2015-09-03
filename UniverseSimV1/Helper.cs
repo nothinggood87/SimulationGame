@@ -63,6 +63,7 @@ namespace UniverseSimV1
             return true;
         }
         public static int[] GetRoundedVelocity(Tile tile) => GetRoundedVelocity(tile.velocity);
+        public static int[] GetRoundedVelocity(Fraction[] velocity) => GetRoundedVelocity(new double[] {velocity[0].Value,velocity[1].Value });
         public static int[] GetRoundedVelocity(double[] velocity)
         {
             int[] roundedVelocity = new int[2];
@@ -90,6 +91,7 @@ namespace UniverseSimV1
             force[1] / mass
         };
         public static double[] GetForce(Tile tile) => GetForce(tile.velocity, tile.mass);
+        public static double[] GetForce(Fraction[] velocity, int mass) => GetForce(new double[2] { velocity[0].Value, velocity[1].Value }, mass);
         public static double[] GetForce(double[] velocity, int mass) => new double[2]
         {
             velocity[0]*mass,

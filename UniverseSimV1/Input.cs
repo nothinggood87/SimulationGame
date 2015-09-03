@@ -69,28 +69,28 @@ namespace UniverseSimV1
                     Grid.SetColumn(buttons[i, j], j);
                 }
             }
-            buttons[0, 0].Content = "Start";
+            buttons[0, 0].Content = "Play";
             buttons[0, 1].Content = "Up";
-            buttons[0, 2].Content = "Stop";
+            buttons[0, 2].Content = "Blank";
 
             buttons[1, 0].Content = "Left";
             buttons[1, 1].Content = "Down";
             buttons[1, 2].Content = "Right";
 
-            buttons[2, 0].Content = "Play";
+            buttons[2, 0].Content = "Blank";
             buttons[2, 1].Content = "Blank";
             buttons[2, 2].Content = "Blank";
 
 
             buttons[0, 0].Click += InputStart;
             buttons[0, 1].Click += InputUp;
-            buttons[0, 2].Click += InputStop;
+            buttons[0, 2].Click += InputBlank;
 
             buttons[1, 0].Click += InputLeft;
             buttons[1, 1].Click += InputDown;
             buttons[1, 2].Click += InputRight;
 
-            buttons[2, 0].Click += InputTogglePause;
+            buttons[2, 0].Click += InputBlank;
             buttons[2, 1].Click += InputBlank;
             buttons[2, 2].Click += InputBlank;
         }
@@ -113,8 +113,18 @@ namespace UniverseSimV1
         }
         private void InputStart(object sender, RoutedEventArgs e)
         {
-            buttons[0, 0].Content = "Started";
-            window.Start();
+            pause = !pause;
+            System.Threading.Thread.Sleep(100);
+            if (!pause)
+            {
+                window.Start();
+                Updating.Start();
+                buttons[0, 0].Content = "Pause";
+                return;
+            }
+            buttons[0, 0].Content = "Play";
+            Updating.Stop();
+            window.Stop();
         }
         private void InputUp(object sender, RoutedEventArgs e)
         {
@@ -140,26 +150,21 @@ namespace UniverseSimV1
         }
         private bool pause = true;
         private bool running = false;
-        private void InputTogglePause(object sender, RoutedEventArgs e)
-        {
-            pause = !pause;
-            System.Threading.Thread.Sleep(100);
-            if(!pause)
-            {
-                Updating.Start();
-                buttons[2, 0].Content = "Pause";
-                return;
-            }
-            buttons[2, 0].Content = "Play";
-
-        }
         private void InputBlank(object sender, RoutedEventArgs e)
         {
         }
-        private void Tick(object sender, ElapsedEventArgs e) => Tick();
-        private void Tick()
+        private void Tick(object sender, ElapsedEventArgs e)
         {
             if (running) { return; }
+            if(Debug.Frames == 0)
+            {
+                new Task(() =>
+                {
+                    InputStop(sender, new RoutedEventArgs());
+                    InputStart(sender, new RoutedEventArgs());
+                }).Start();
+                
+            }
             running = true;
             Move.OneTick(map, playerAcceleration);
             Gravity.UpdateGravity(map);

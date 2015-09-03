@@ -38,7 +38,7 @@ namespace UniverseSimV1
             //world.PlaceOneTile(new int[2] { 6, 2 }, new Tile(2, new double[2] { 0, 0.8 }));
             //world.PlaceOneTile(new int[2] { 8, 2 }, new Tile(2, new double[2] { 0, 1.6 }));
             world.PlaceOneTile(new int[2] { 50, 50 }, new Tile(10000));
-            world.PlaceOneTile(new int[2] { 50, 45 }, new Tile(1, new double[2] { 0.5,0 }));
+            world.PlaceOneTile(new int[2] { 50, 55 }, new Tile(1, new double[2] { 0.5,0 }));
             //world.PlaceOneTile(new int[2] { 15, 10 });
             //world.PlaceOneTile(new int[2] { 10, 15 });
             //world.PlaceOneTile(new int[2] { 20, 15 });

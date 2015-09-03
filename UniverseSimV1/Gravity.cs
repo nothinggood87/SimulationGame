@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace UniverseSimV1
 {
+    /// <summary>
+    /// unable to fix(I think it is 2d gravity that is the problem)
+    /// </summary>
     static class Gravity
     {
         /// <summary>
@@ -45,14 +48,14 @@ namespace UniverseSimV1
             Fraction[] vectorComplexe = Helper.GetVectorComplexe(displacement);
             vectorComplexe[0].Value *= gravity;
             vectorComplexe[1].Value *= gravity;
-            map.tile(coords1).velocity[0] += (vectorComplexe[0].Value);
-            map.tile(coords1).velocity[1] += (vectorComplexe[1].Value);
+            map.tile(coords1).velocity[0] += vectorComplexe[0].Value;
+            map.tile(coords1).velocity[1] += vectorComplexe[1].Value;
         }
-        private static double GetGravity(double distance, int mass2)
+        private static double GetGravity(int distance, int mass2)
         {
-            if(distance != 0)
+            if (distance > 0)
             {
-                return (G * (mass2 / distance));
+                return G * (mass2 / Convert.ToDouble(distance));
             }
             return 0;
         }

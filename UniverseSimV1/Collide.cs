@@ -210,22 +210,30 @@ namespace UniverseSimV1
             forceTotal[0] += force2[0];
             forceTotal[1] += force2[1];
             int mass2 = map.tile(coords2).mass;
-            CollideTileElastic(coords1, coords2, map, velocity1, forceTotal, mass2);
+            CollideTileElastic(map.tile(coords1),map.tile(coords2), velocity1, forceTotal, mass2);
         }
-        private static void CollideTileElastic(int[] coords1, int[] coords2, Map map, double[] velocity1,double[] forceTotal, int mass2)
+        private static void CollideTileElastic(Tile tile1,Tile tile2, double[] velocity1,double[] forceTotal, int mass2)
         {
+            //Debug.Write("colliding");
             if (forceTotal[0] / mass2 >= velocity1[0] && forceTotal[1] / mass2 >= velocity1[0])//extra force or equel
             {
-                map.tile(coords2).velocity = velocity1;
+                tile2.velocity[0] = velocity1[0];
+                tile2.velocity[1] = velocity1[1];
                 double[] force1 = forceTotal;
-                force1[0] -= velocity1[0] * mass2;
-                force1[1] -= velocity1[1] * mass2;
-                map.tile(coords1).velocity = Helper.GetVelocity(force1, map.tile(coords1).mass);
+                force1[0] -= (velocity1[0] * mass2);
+                force1[1] -= (velocity1[1] * mass2);
+                double[] newVelocity1 = Helper.GetVelocity(force1, tile1.mass);
+                tile1.velocity[0] = newVelocity1[0];
+                tile1.velocity[1] = newVelocity1[1];
                 return;
             }
             //less force
-            map.tile(coords2).velocity = Helper.GetVelocity(forceTotal, map.tile(coords1).mass);
-            map.tile(coords1).velocity = new double[2];
+            else
+            {
+                double[] newVelocity2 = Helper.GetVelocity(forceTotal, mass2);
+                tile2.velocity = newVelocity2;
+                tile1.velocity = new double[2];
+            }
         }
     }
 }
